@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>About - Mr. Alex Gonzalez | Barnum STEM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Teaching portfolio and philosophy of Mr. Alex Gonzalez, STEM instructor at Barnum Public Schools." />
+  <style>
+    :root {
+      --bg: #0f172a; --card: #111827; --muted: #94a3b8; --text: #e5e7eb;
+      --accent: #22c55e; --accent-2: #06b6d4; --border: #243041;
+      --chip: #1f2937; --chip-active: #0ea5e9; --shadow: 0 10px 25px rgba(0,0,0,0.35);
+      --highlight: #fbbf24; --highlight-bg: rgba(251,191,36,0.1);
+    }
+    
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(34,197,94,0.06), transparent 50%),
+        radial-gradient(1000px 600px at 110% 10%, rgba(6,182,212,0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px; margin: 0 auto; padding: 0 22px;
+    }
+    
+    header { 
+      padding: 40px 0 20px; text-align: center; border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    h1 { margin: 0 0 10px; font-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem); }
+    .subtitle { color: var(--muted); font-size: 1.2rem; margin-bottom: 20px; }
+    .school-badge {
+      display: inline-block; background: var(--highlight-bg); color: var(--highlight);
+      padding: 8px 16px; border-radius: 20px; font-weight: 600;
+      border: 1px solid var(--highlight);
+    }
+    
+    .nav-links {
+      display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .nav-link {
+      color: var(--accent); text-decoration: none; padding: 8px 16px;
+      border: 1px solid var(--border); border-radius: 20px; transition: all 0.3s ease;
+    }
+    .nav-link:hover { background: var(--accent); color: var(--bg); transform: translateY(-2px); }
+    
+    .section {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .section-title {
+      font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;
+      color: var(--accent); display: flex; align-items: center; gap: 10px;
+    }
+    
+    .philosophy-quote {
+      background: var(--highlight-bg); border-left: 4px solid var(--highlight);
+      padding: 20px; border-radius: 10px; margin: 20px 0;
+      font-style: italic; font-size: 1.1rem; color: var(--text);
+    }
+    
+    .experience-grid {
+      display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .experience-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 15px; padding: 20px; transition: transform 0.3s ease;
+    }
+    .experience-card:hover { transform: translateY(-3px); }
+    
+    .experience-title {
+      font-size: 1.2rem; font-weight: 700; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .experience-org {
+      color: var(--highlight); font-weight: 600; margin-bottom: 5px;
+    }
+    .experience-dates {
+      color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;
+    }
+    .experience-description {
+      font-size: 0.95rem; line-height: 1.5;
+    }
+    
+    .specializations {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;
+    }
+    .specialization {
+      background: var(--chip); color: var(--text); padding: 6px 12px;
+      border-radius: 15px; font-size: 0.9rem; border: 1px solid var(--border);
+    }
+    
+    .philosophy-points {
+      display: grid; gap: 20px; margin-top: 20px;
+    }
+    
+    .philosophy-point {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    
+    .philosophy-point h4 {
+      color: var(--accent-2); margin: 0 0 10px; font-size: 1.1rem;
+    }
+    
+    .contact-section {
+      text-align: center; background: var(--highlight-bg);
+      border: 1px solid var(--highlight); border-radius: 20px;
+      padding: 30px; margin-top: 40px;
+    }
+    
+    .contact-title {
+      font-size: 1.5rem; color: var(--highlight); margin-bottom: 15px;
+    }
+    
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px; margin: 30px 0;
+    }
+    
+    .stat {
+      text-align: center; padding: 20px; background: rgba(255,255,255,0.02);
+      border-radius: 15px; border: 1px solid var(--border);
+    }
+    
+    .stat-number {
+      font-size: 2.5rem; font-weight: 700; color: var(--accent);
+      display: block; margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: var(--muted); font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 0 15px; }
+      .section { padding: 20px; }
+      .experience-grid { grid-template-columns: 1fr; }
+      .nav-links { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Mr. Alex Gonzalez</h1>
+      <div class="subtitle">STEM Instructor & Digital Media Specialist</div>
+      <div class="school-badge">Barnum Public Schools</div>
+      
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Student Gallery</a>
+        <a href="curriculum.html" class="nav-link">📚 Curriculum Timeline</a>
+        <a href="about.html" class="nav-link">👨‍🏫 About Me</a>
+      </div>
+    </header>
+
+    <div class="section">
+      <h2 class="section-title">🎯 Teaching Philosophy</h2>
+      <div class="philosophy-quote">
+        "There are many ways to teach - but my favorite is project based learning - because I selfishly get to learn too."
+      </div>
+      
+      <div class="philosophy-points">
+        <div class="philosophy-point">
+          <h4>🎨 Project-Based Learning</h4>
+          <p>Emphasizing hands-on, real-world projects that allow students to apply their skills in practical contexts. Each project serves as a learning journey, combining guided problem solving with a high dose of personal vision.</p>
+        </div>
+        
+        <div class="philosophy-point">
+          <h4>👑 Student Ownership</h4>
+          <p>Creating an environment where students take full ownership of their work and learning process. This includes setting personal goals, managing project timelines, and developing their unique creative voice. By the end of our time together, each student should have something tangible to share - whether it's a personal website, a portfolio of work, or a live project they can showcase to potential employers or educational institutions.</p>
+        </div>
+        
+        <div class="philosophy-point">
+          <h4>🔄 Iterative Development</h4>
+          <p>Teaching through rapid prototyping and continuous feedback cycles. Students learn to refine their work through multiple iterations, incorporating feedback and improving their designs through an interactive development process.</p>
+        </div>
+      </div>
+      
+      <p style="margin-top: 25px; font-style: italic; color: var(--muted);">
+        I have found that this approach helpful for students to develop both technical proficiency and creative confidence, preparing them for real-world challenges in digital media and technology.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">📚 Teaching Experience</h2>
+      
+      <div class="experience-grid">
+        <div class="experience-card">
+          <div class="experience-title">Adjunct Professor</div>
+          <div class="experience-org">Choate Rosemary Hall</div>
+          <div class="experience-dates">2023</div>
+          <div class="experience-description">
+            <strong>Courses Taught:</strong><br>
+            • Filmmaking II<br>
+            • Digital Photography I<br>
+            • Digital Photography II<br><br>
+            Developed and implemented curriculum for digital filmmaking and photography courses. By the end of the semester, students created original artwork and film and created a portfolio piece to share.
+          </div>
+        </div>
+        
+        <div class="experience-card">
+          <div class="experience-title">Adjunct Professor</div>
+          <div class="experience-org">SUNY New Paltz</div>
+          <div class="experience-dates">2019-2022</div>
+          <div class="experience-description">
+            Taught courses in website development using Wix. Students focused primarily on the design - colors - theory - and created their own unique business brand and pretended as if it was real.
+          </div>
+        </div>
+        
+        <div class="experience-card">
+          <div class="experience-title">Adjunct Professor</div>
+          <div class="experience-org">Jacob Burns Film Center</div>
+          <div class="experience-dates">2016-2018</div>
+          <div class="experience-description">
+            Instructed students in film production and digital media, with a focus on storytelling and technical proficiency.
+          </div>
+        </div>
+        
+        <div class="experience-card">
+          <div class="experience-title">Adjunct Professor</div>
+          <div class="experience-org">Workspace Academy</div>
+          <div class="experience-dates">2017</div>
+          <div class="experience-description">
+            Led courses in virtual reality where students created their own unique virtual reality experiences using Unreal Engine. Students also learned conditional logic and coding through the use of blueprints.
+          </div>
+        </div>
+        
+        <div class="experience-card">
+          <div class="experience-title">Digital Media Instructor</div>
+          <div class="experience-org">Public Library Programs</div>
+          <div class="experience-dates">2015-Present</div>
+          <div class="experience-description">
+            <strong>Locations:</strong><br>
+            • Ridgefield Library<br>
+            • Yonkers Library<br>
+            • Sleepy Hollow Library<br>
+            • New Haven Library<br>
+            • Bethel Library<br><br>
+            Developed and led workshops in digital media, coding, and creative technology for diverse age groups. Created accessible programs that introduced community members to digital tools and creative expression.
+          </div>
+        </div>
+        
+        <div class="experience-card">
+          <div class="experience-title">Technology & Media Instructor</div>
+          <div class="experience-org">After-School Programs</div>
+          <div class="experience-dates">2015-Present</div>
+          <div class="experience-description">
+            Led multiple after-school programs across Connecticut and New York, teaching digital media production, coding, and creative technology to K-12 students. Focused on project-based learning and hands-on experience with modern digital tools.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">🛠️ Teaching Specializations</h2>
+      <div class="specializations">
+        <span class="specialization">Digital Media Production</span>
+        <span class="specialization">Unreal Engine</span>
+        <span class="specialization">Curriculum Development</span>
+        <span class="specialization">Stop Motion Animation</span>
+        <span class="specialization">Digital Photography</span>
+        <span class="specialization">Filmmaking</span>
+        <span class="specialization">Creative Technology</span>
+        <span class="specialization">Student Mentoring</span>
+        <span class="specialization">Educational Technology</span>
+        <span class="specialization">Digital Literacy</span>
+        <span class="specialization">Portfolio Development</span>
+        <span class="specialization">Classroom Management</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-number">8+</span>
+        <div class="stat-label">Years Teaching</div>
+      </div>
+      <div class="stat">
+        <span class="stat-number">500+</span>
+        <div class="stat-label">Students Taught</div>
+      </div>
+      <div class="stat">
+        <span class="stat-number">15+</span>
+        <div class="stat-label">Institutions</div>
+      </div>
+      <div class="stat">
+        <span class="stat-number">12</span>
+        <div class="stat-label">Specializations</div>
+      </div>
+    </div>
+
+    <div class="contact-section">
+      <h3 class="contact-title">Let's Connect</h3>
+      <p>I'm always interested in new teaching opportunities and collaborations. References and additional materials are available upon request.</p>
+      <p style="margin-top: 15px; color: var(--muted);">
+        <strong>Contact Me</strong><br>
+        Barnum Public Schools STEM Program
+      </p>
+    </div>
+  </div>
+</body>
+</html>

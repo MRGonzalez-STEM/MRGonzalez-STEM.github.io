@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Barnum Public Schools - STEM Showcase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive gallery and slideshow of student Tinkercad projects by grade and class." />
+  <style>
+    :root {
+      --bg: #0f172a; --card: #111827; --muted: #94a3b8; --text: #e5e7eb;
+      --accent: #22c55e; --accent-2: #06b6d4; --border: #243041;
+      --chip: #1f2937; --chip-active: #0ea5e9; --shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(34,197,94,0.06), transparent 50%),
+        radial-gradient(1000px 600px at 110% 10%, rgba(6,182,212,0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      line-height: 1.5;
+    }
+    header { padding: 28px 22px 8px; max-width: 1200px; margin: 0 auto; }
+    h1 { margin: 0 0 6px; font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.6rem); }
+    .subtitle { color: var(--muted); font-size: 0.98rem; }
+
+    .toolbar {
+      display: grid; gap: 12px; grid-template-columns: 1fr auto; align-items: center;
+      max-width: 1200px; margin: 16px auto 10px; padding: 0 22px;
+    }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      border: 1px solid var(--border); background: var(--chip); color: var(--text);
+      padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 0.92rem;
+      transition: transform .08s ease, background .2s ease, color .2s ease, border-color .2s ease;
+      user-select: none;
+    }
+    .chip:hover { transform: translateY(-1px); }
+    .chip.active { background: rgba(14,165,233,0.18); border-color: var(--chip-active); color: #e0f2fe; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: center; }
+    .btn { background: linear-gradient(135deg, rgba(34,197,94,0.18), rgba(6,182,212,0.18)); color: #d1fae5; border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-weight: 600; cursor: pointer; transition: transform .08s ease, filter .2s ease; backdrop-filter: blur(6px); }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+    .bar { max-width: 1200px; margin: 0 auto; padding: 6px 22px 12px; display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; }
+    .input { background: #0c1424; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 8px 12px; min-width: 160px; }
+    .select { background: #0c1424; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 8px 12px; }
+    .count { color: var(--muted); font-size: 0.92rem; }
+
+    .grid {
+      max-width: 1200px; margin: 8px auto 64px; padding: 0 22px;
+      display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow);
+      transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease; cursor: pointer; position: relative;
+    }
+    .card:hover { transform: translateY(-2px); border-color: #2b3b51; box-shadow: 0 12px 28px rgba(0,0,0,0.45); }
+    .thumb { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: #0b1220; display: block; }
+    .placeholder { width: 100%; aspect-ratio: 4/3; display: grid; place-items: center; background:
+        repeating-conic-gradient(from 0deg, #0b1220 0 10deg, #0d1422 10deg 20deg); color: #a5b4fc; font-weight: 600; font-size: 0.95rem; }
+    .meta { padding: 12px 14px 14px; display: grid; gap: 4px; font-size: 0.95rem; }
+    .title { font-weight: 700; }
+    .sub { color: var(--muted); font-size: 0.9rem; }
+
+    /* Modal / Slideshow */
+    .overlay { position: fixed; inset: 0; background: rgba(2,6,23,0.84); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .overlay.open { display: flex; }
+    .viewer { width: min(1200px, 94vw); height: min(80vh, 70vw); background: #0b1220; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; display: grid; grid-template-rows: auto 1fr auto; }
+    .viewer header { display: flex; align-items: center; gap: 16px; padding: 10px 12px; width: 100%; }
+    .viewer h3 { margin: 0; font-size: 1.05rem; }
+    .viewer .tag { color: #93c5fd; font-size: 0.9rem; }
+    .spacer { flex: 1; }
+    .viewer .ctrl { display: flex; gap: 8px; }
+    .viewer .ctrl .btn { background: rgba(255,255,255,0.06); color: #e2e8f0; border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; }
+    .frame-wrap { position: relative; width: 100%; height: 100%; background: #0b1220; }
+    iframe { width: 100%; height: 100%; border: 0; }
+
+    .nav { position: absolute; inset: 0; pointer-events: none; }
+    .nav button { pointer-events: auto; position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border); background: rgba(2,6,23,0.55); color: #e5e7eb; display: grid; place-items: center; cursor: pointer; transition: transform .08s ease, filter .2s ease; box-shadow: var(--shadow); }
+    .nav button:hover { transform: translateY(-50%) scale(1.05); filter: brightness(1.1); }
+    .nav .prev { left: 12px; }
+    .nav .next { right: 12px; }
+    .footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+    .status { color: #a7f3d0; }
+    .hint { color: #94a3b8; }
+
+    @media (max-width: 640px) {
+      .nav button { width: 40px; height: 40px; }
+      .viewer { height: 76vh; }
+      .bar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="pageTitle">Barnum Public Schools - STEM Showcase</h1>
+    <div class="subtitle">Browse by grade or class; click any project to open the interactive viewer or start a slideshow.</div>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters" id="gradeFilters"></div>
+    <div class="controls">
+      <a href="index.html" class="btn" title="Dashboard Home">🏠 Dashboard</a>
+      <a href="curriculum.html" class="btn" title="View Curriculum Timeline">📚 Curriculum</a>
+      <a href="about.html" class="btn" title="About Mr. Gonzalez">👨‍🏫 About</a>
+      <button class="btn" id="presentBtn" title="Start slideshow of current filter">Start Slideshow</button>
+    </div>
+  </div>
+
+  <div class="bar">
+    <select id="classSelect" class="select" title="Filter by class">
+      <option value="__ALL__">All Classes</option>
+    </select>
+    <input id="searchBox" class="input" placeholder="Search (title, student, tags)…" />
+    <select id="sortSelect" class="select" title="Sort">
+      <option value="date-desc">Newest first</option>
+      <option value="date-asc">Oldest first</option>
+      <option value="title-asc">Title A→Z</option>
+      <option value="student-asc">Student A→Z</option>
+    </select>
+    <div class="count" id="countText"></div>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <!-- Modal / Slideshow -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="viewer" role="dialog" aria-modal="true" aria-label="Tinkercad Project Viewer">
+      <header>
+        <h3 id="viewerTitle">Project Title</h3>
+        <span class="tag" id="viewerTag">Class</span>
+        <div class="spacer"></div>
+        <div class="ctrl">
+          <button class="btn" id="autoBtn" title="Toggle autoplay">Auto</button>
+          <button class="btn" id="closeBtn" title="Close (Esc)">Close</button>
+        </div>
+      </header>
+      <div class="frame-wrap">
+        <iframe id="viewerFrame" loading="lazy" allowfullscreen title="Tinkercad 3D Viewer" referrerpolicy="no-referrer"></iframe>
+        <div class="nav">
+          <button class="prev" id="prevBtn" aria-label="Previous">◀</button>
+          <button class="next" id="nextBtn" aria-label="Next">▶</button>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="status" id="status">1 / 1</div>
+        <div class="hint">Tips: ◀ ▶ arrows • Space toggles autoplay • Esc to close</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------- Load data -------
+    const params = new URLSearchParams(location.search);
+    let DATA = { meta:{ title:"STEM Tinkercad Showcase", autoplayMs:9000 }, projects:[], classes:[] };
+    let ALL = []; let LIST = []; let CLASSES = []; let GRADES = [];
+    let filterGrade = params.get('grade') || 'All';
+    let filterClass = '__ALL__';
+    let idx = 0; let autoplay = false; let timer = null;
+
+    // Elements
+    const pageTitle = document.getElementById('pageTitle');
+    const gradeFilters = document.getElementById('gradeFilters');
+    const classSelect = document.getElementById('classSelect');
+    const searchBox = document.getElementById('searchBox');
+    const sortSelect = document.getElementById('sortSelect');
+    const gridEl = document.getElementById('grid');
+    const countText = document.getElementById('countText');
+
+    const overlay = document.getElementById('overlay');
+    const viewerFrame = document.getElementById('viewerFrame');
+    const viewerTitle = document.getElementById('viewerTitle');
+    const viewerTag = document.getElementById('viewerTag');
+    const status = document.getElementById('status');
+    const closeBtn = document.getElementById('closeBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const autoBtn = document.getElementById('autoBtn');
+    const presentBtn = document.getElementById('presentBtn');
+
+    init();
+    async function init() {
+      try {
+        const res = await fetch('projects.json', { cache:'no-store' });
+        if (!res.ok) throw new Error('projects.json not found');
+        DATA = await res.json();
+      } catch (e) {
+        console.error(e);
+        gridEl.innerHTML = `<div style="grid-column:1/-1;color:#fca5a5;background:#1f2937;padding:12px 14px;border:1px solid #374151;border-radius:10px;">
+          Couldn't load <b>projects.json</b>. Make sure it's in the root next to <b>index.html</b>.
+        </div>`;
+        return;
+      }
+
+      pageTitle.textContent = DATA.meta?.title || 'STEM Tinkercad Showcase';
+      ALL = (DATA.projects || []).map(p => ({ ...p, _q: (p.title + ' ' + p.student + ' ' + (p.tags||[]).join(' ') + ' ' + p.klass).toLowerCase() }));
+      CLASSES = DATA.classes || [];
+      GRADES = ['All', ...Array.from(new Set(CLASSES.map(c => c.grade))).sort((a,b)=> (a==='All')? -1 : (a>b?1:-1))];
+
+      // Render grade chips
+      renderGradeFilters();
+
+      // Populate class select
+      populateClasses();
+
+      // Wire controls
+      wireControls();
+
+      // Initial render
+      applyFilter();
+    }
+
+    function renderGradeFilters() {
+      gradeFilters.innerHTML = '';
+      GRADES.forEach(g => {
+        const btn = document.createElement('button');
+        btn.className = 'chip' + (g === filterGrade ? ' active' : '');
+        btn.textContent = g;
+        btn.onclick = () => { filterGrade = g; syncGradeChips(); populateClasses(); applyFilter(); };
+        gradeFilters.appendChild(btn);
+      });
+    }
+    function syncGradeChips() {
+      Array.from(gradeFilters.children).forEach(ch => {
+        ch.classList.toggle('active', ch.textContent === filterGrade);
+      });
+    }
+
+    function populateClasses() {
+      const classes = CLASSES.filter(c => filterGrade === 'All' || c.grade === filterGrade);
+      classSelect.innerHTML = `<option value="__ALL__">All Classes${filterGrade!=='All'?' ('+filterGrade+')':''}</option>` +
+        classes.map(c => `<option value="${escapeAttr(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+      filterClass = '__ALL__';
+    }
+
+    function wireControls() {
+      classSelect.addEventListener('change', () => { filterClass = classSelect.value; applyFilter(); });
+      searchBox.addEventListener('input', () => applyFilter());
+      sortSelect.addEventListener('change', () => applyFilter());
+
+      closeBtn.addEventListener('click', closeViewer);
+      prevBtn.addEventListener('click', prev);
+      nextBtn.addEventListener('click', next);
+      autoBtn.addEventListener('click', toggleAutoplay);
+      presentBtn.addEventListener('click', () => openViewer(0));
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeViewer(); });
+
+      document.addEventListener('keydown', (e) => {
+        if (!overlay.classList.contains('open')) return;
+        if (e.key === 'Escape') { e.preventDefault(); closeViewer(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+        if (e.key === ' ') { e.preventDefault(); toggleAutoplay(); }
+      });
+    }
+
+    function applyFilter() {
+      const q = (searchBox.value || '').toLowerCase().trim();
+
+      LIST = ALL.filter(p => {
+        const gradeMatch = (filterGrade === 'All') || (p.grade === filterGrade);
+        const classMatch = (filterClass === '__ALL__') || (p.klass === filterClass);
+        const searchMatch = !q || p._q.includes(q);
+        return gradeMatch && classMatch && searchMatch;
+      });
+
+      // Sort
+      const sort = sortSelect.value;
+      LIST.sort((a, b) => {
+        switch (sort) {
+          case 'date-asc': return (a.date||'') < (b.date||'') ? -1 : 1;
+          case 'date-desc': return (a.date||'') > (b.date||'') ? -1 : 1;
+          case 'title-asc': return (a.title||'').localeCompare(b.title||'');
+          case 'student-asc': return (a.student||'').localeCompare(b.student||'');
+          default: return 0;
+        }
+      });
+
+      renderGrid();
+      countText.textContent = `${LIST.length} project${LIST.length!==1?'s':''}`;
+    }
+
+    function renderGrid() {
+      gridEl.innerHTML = LIST.map((p, i) => cardTemplate(p, i)).join('');
+      gridEl.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => openViewer(Number(card.getAttribute('data-idx'))));
+      });
+    }
+
+    function cardTemplate(p, i) {
+      const img = p.thumbnail && p.thumbnail.trim().length > 0
+        ? `<img class="thumb" src="${escapeAttr(p.thumbnail)}" alt="${escapeAttr(p.title)} thumbnail" loading="lazy" />`
+        : `<div class="placeholder">No thumbnail</div>`;
+      const title = escapeHtml(p.title);
+      const sub = `${escapeHtml(p.student)} • ${escapeHtml(p.klass)}`;
+
+      return `
+        <article class="card" data-idx="${i}" title="Open ${escapeAttr(p.title)}">
+          ${img}
+          <div class="meta">
+            <div class="title">${title}</div>
+            <div class="sub">${sub}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function openViewer(i = 0) {
+      if (LIST.length === 0) return;
+      idx = ((i % LIST.length) + LIST.length) % LIST.length;
+      updateViewer();
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeViewer() {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      stopAutoplay();
+      viewerFrame.src = 'about:blank';
+    }
+    function updateViewer() {
+      const p = LIST[idx];
+      viewerTitle.textContent = `${p.title} — ${p.student}`;
+      viewerTag.textContent = `${p.klass} • ${p.grade}`;
+      status.textContent = `${idx + 1} / ${LIST.length}`;
+      viewerFrame.src = p.embedUrl;
+    }
+    function prev() { idx = (idx - 1 + LIST.length) % LIST.length; updateViewer(); }
+    function next() { idx = (idx + 1) % LIST.length; updateViewer(); }
+    function startAutoplay() { autoplay = true; autoBtn.textContent = 'Auto: ON'; timer = setInterval(next, DATA.meta?.autoplayMs || 9000); }
+    function stopAutoplay() { autoplay = false; autoBtn.textContent = 'Auto'; if (timer) clearInterval(timer); timer = null; }
+    function toggleAutoplay() { autoplay ? stopAutoplay() : startAutoplay(); }
+
+    function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+    function escapeAttr(s) { return String(s ?? '').replace(/"/g, '&quot;'); }
+  </script>
+</body>
+</html>

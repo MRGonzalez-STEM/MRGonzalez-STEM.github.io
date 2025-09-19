@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Barnum Public Schools - STEM Curriculum 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive curriculum timeline showcasing student STEM projects throughout the year." />
+  <style>
+    :root {
+      --bg: #0f172a; --card: #111827; --muted: #94a3b8; --text: #e5e7eb;
+      --accent: #22c55e; --accent-2: #06b6d4; --border: #243041;
+      --chip: #1f2937; --chip-active: #0ea5e9; --shadow: 0 10px 25px rgba(0,0,0,0.35);
+      
+      /* Curriculum Colors */
+      --september: #d1fae5; --september-bg: rgba(209,250,229,0.1);
+      --october: #fef3c7; --october-bg: rgba(254,243,199,0.1);
+      --november: #dbeafe; --november-bg: rgba(219,234,254,0.1);
+      --december: #e0e7ff; --december-bg: rgba(224,231,255,0.1);
+      --january: #fce7f3; --january-bg: rgba(252,231,243,0.1);
+      --feb-mar: #fde2e7; --feb-mar-bg: rgba(253,226,231,0.1);
+      --apr-may: #ecfdf5; --apr-may-bg: rgba(236,253,245,0.1);
+      --june: #fef7cd; --june-bg: rgba(254,247,205,0.1);
+    }
+    
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(34,197,94,0.06), transparent 50%),
+        radial-gradient(1000px 600px at 110% 10%, rgba(6,182,212,0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      line-height: 1.5;
+    }
+    
+    header { 
+      padding: 28px 22px 8px; max-width: 1400px; margin: 0 auto; 
+      text-align: center;
+    }
+    h1 { margin: 0 0 6px; font-size: clamp(1.8rem, 1.2rem + 2vw, 3rem); }
+    .subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 20px; }
+    
+    .nav-tabs {
+      display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .nav-tab {
+      padding: 10px 20px; border: 2px solid var(--border); border-radius: 25px;
+      background: var(--chip); color: var(--text); cursor: pointer;
+      transition: all 0.3s ease; font-weight: 600;
+    }
+    .nav-tab:hover { transform: translateY(-2px); }
+    .nav-tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    
+    .timeline {
+      max-width: 1200px; margin: 0 auto; padding: 40px 22px;
+      position: relative;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute; left: 50px; top: 0; bottom: 0;
+      width: 4px; background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius: 2px; z-index: 1;
+    }
+    
+    .timeline-item {
+      position: relative; margin-bottom: 60px; padding-left: 120px;
+      opacity: 0; transform: translateX(-50px);
+      animation: slideIn 0.6s ease forwards;
+    }
+    
+    .timeline-item:nth-child(even) {
+      animation-delay: 0.2s;
+    }
+    
+    .timeline-item:nth-child(odd) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .timeline-dot {
+      position: absolute; left: 38px; top: 20px;
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 4px solid var(--bg); z-index: 2;
+      transition: all 0.3s ease;
+    }
+    
+    .timeline-item:hover .timeline-dot {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+    }
+    
+    .timeline-connector {
+      position: absolute; left: 48px; top: 44px;
+      width: 4px; height: 40px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius: 2px; z-index: 1;
+    }
+    
+    .timeline-item:last-child .timeline-connector {
+      display: none;
+    }
+    
+    .month-section {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border); border-radius: 20px;
+      box-shadow: var(--shadow); transition: all 0.3s ease;
+      position: relative; overflow: hidden;
+    }
+    
+    .month-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+    
+    .month-section:hover { 
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .month-header {
+      padding: 25px 30px 20px; font-size: 1.5rem; font-weight: 700;
+      display: flex; align-items: center; gap: 15px;
+      position: relative;
+    }
+    
+    .month-number {
+      position: absolute; top: -10px; right: 20px;
+      background: var(--accent); color: var(--bg);
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem;
+    }
+    
+    .month-content {
+      padding: 0 30px 30px; display: grid; gap: 20px;
+    }
+    
+    .focus-area {
+      background: rgba(255,255,255,0.02); border-radius: 15px;
+      padding: 20px; border: 1px solid var(--border);
+    }
+    .focus-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+    .tools { color: var(--muted); margin-bottom: 15px; }
+    .outcomes { font-style: italic; }
+    
+    .projects-grid {
+      display: grid; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      margin-top: 20px;
+    }
+    
+    .project-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    .project-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    
+    .project-thumb {
+      width: 100%; height: 160px; object-fit: cover; background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .project-meta { padding: 15px; }
+    .project-title { font-weight: 600; margin-bottom: 5px; }
+    .project-student { color: var(--muted); font-size: 0.9rem; }
+    
+    /* Month-specific colors */
+    .september { background: var(--september-bg); border-left: 5px solid var(--september); }
+    .september .month-header { background: var(--september-bg); color: var(--september); }
+    
+    .october { background: var(--october-bg); border-left: 5px solid var(--october); }
+    .october .month-header { background: var(--october-bg); color: var(--october); }
+    
+    .november { background: var(--november-bg); border-left: 5px solid var(--november); }
+    .november .month-header { background: var(--november-bg); color: var(--november); }
+    
+    .december { background: var(--december-bg); border-left: 5px solid var(--december); }
+    .december .month-header { background: var(--december-bg); color: var(--december); }
+    
+    .january { background: var(--january-bg); border-left: 5px solid var(--january); }
+    .january .month-header { background: var(--january-bg); color: var(--january); }
+    
+    .feb-mar { background: var(--feb-mar-bg); border-left: 5px solid var(--feb-mar); }
+    .feb-mar .month-header { background: var(--feb-mar-bg); color: var(--feb-mar); }
+    
+    .apr-may { background: var(--apr-may-bg); border-left: 5px solid var(--apr-may); }
+    .apr-may .month-header { background: var(--apr-may-bg); color: var(--apr-may); }
+    
+    .june { background: var(--june-bg); border-left: 5px solid var(--june); }
+    .june .month-header { background: var(--june-bg); color: var(--june); }
+    
+    .stats-bar {
+      background: rgba(255,255,255,0.05); border-radius: 15px;
+      padding: 20px; margin-bottom: 30px; text-align: center;
+    }
+    .stats { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+    .stat { text-align: center; }
+    .stat-number { font-size: 2rem; font-weight: 700; color: var(--accent); }
+    .stat-label { color: var(--muted); font-size: 0.9rem; }
+    
+    @media (max-width: 768px) {
+      .timeline { 
+        padding: 20px 15px;
+      }
+      
+      .timeline::before {
+        left: 20px;
+      }
+      
+      .timeline-item {
+        padding-left: 60px;
+        margin-bottom: 40px;
+      }
+      
+      .timeline-dot {
+        left: 8px;
+        width: 20px;
+        height: 20px;
+      }
+      
+      .timeline-connector {
+        left: 18px;
+        height: 30px;
+      }
+      
+      .month-header {
+        padding: 20px 20px 15px;
+        font-size: 1.2rem;
+      }
+      
+      .month-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+        top: -5px;
+        right: 15px;
+      }
+      
+      .month-content { 
+        padding: 0 20px 20px; 
+      }
+      
+      .projects-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
+      .stats { 
+        flex-direction: column; 
+        gap: 15px; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Barnum Public Schools - STEM Curriculum 2025</h1>
+    <div class="subtitle">A year-long journey through 3D Design, Coding, Web Development, Game Creation, and Robotics</div>
+  </header>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-view="timeline">Curriculum Timeline</div>
+    <div class="nav-tab" data-view="gallery">Student Gallery</div>
+    <div class="nav-tab" data-view="stats">Progress Stats</div>
+    <a href="index.html" class="nav-tab">🏠 Dashboard</a>
+    <a href="gallery.html" class="nav-tab">🎨 Gallery</a>
+    <a href="about.html" class="nav-tab">👨‍🏫 About</a>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number" id="totalProjects">0</div>
+        <div class="stat-label">Total Projects</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="activeStudents">0</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="completedMonths">0</div>
+        <div class="stat-label">Completed Focus Areas</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="timeline-view" class="timeline">
+    <!-- September: 3D Design -->
+    <div class="timeline-item">
+      <div class="timeline-dot september"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section september">
+        <div class="month-header">
+          <span>🏗️</span>
+          <span>September - 3D Design Foundation</span>
+          <div class="month-number">1</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: 3D Design & Prototyping</div>
+            <div class="tools">Key Tools: Tinkercad</div>
+            <div class="outcomes">Student Outcomes: Design & prototype treehouse models, learn basic 3D modeling principles</div>
+          </div>
+          <div class="projects-grid" id="september-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- October: Coding Foundations -->
+    <div class="timeline-item">
+      <div class="timeline-dot october"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section october">
+        <div class="month-header">
+          <span>💻</span>
+          <span>October - Coding Foundations</span>
+          <div class="month-number">2</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Interactive Programming</div>
+            <div class="tools">Key Tools: Scratch, Tynker</div>
+            <div class="outcomes">Student Outcomes: Learn code fundamentals, create interactive games and stories</div>
+          </div>
+          <div class="projects-grid" id="october-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- November: Web Development -->
+    <div class="timeline-item">
+      <div class="timeline-dot november"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section november">
+        <div class="month-header">
+          <span>🌐</span>
+          <span>November - Web Development</span>
+          <div class="month-number">3</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Digital Portfolios</div>
+            <div class="tools">Key Tools: HTML, CSS, JavaScript (Tools TBD)</div>
+            <div class="outcomes">Student Outcomes: Build personal portfolio websites showcasing interests and projects</div>
+          </div>
+          <div class="projects-grid" id="november-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- December: 3D World Development -->
+    <div class="timeline-item">
+      <div class="timeline-dot december"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section december">
+        <div class="month-header">
+          <span>🎮</span>
+          <span>December - 3D World Development</span>
+          <div class="month-number">4</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Virtual Environments</div>
+            <div class="tools">Key Tools: Unreal Engine 5</div>
+            <div class="outcomes">Student Outcomes: Explore UE5, build landscapes, code character navigation systems</div>
+          </div>
+          <div class="projects-grid" id="december-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- January: Digital Media -->
+    <div class="timeline-item">
+      <div class="timeline-dot january"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section january">
+        <div class="month-header">
+          <span>🎨</span>
+          <span>January - Digital Media</span>
+          <div class="month-number">5</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Creative Design</div>
+            <div class="tools">Key Tools: Photo Editing & Design Software (Tools TBD)</div>
+            <div class="outcomes">Student Outcomes: Master photo editing and digital design techniques</div>
+          </div>
+          <div class="projects-grid" id="january-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- February-March: Game Development -->
+    <div class="timeline-item">
+      <div class="timeline-dot feb-mar"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section feb-mar">
+        <div class="month-header">
+          <span>🎯</span>
+          <span>February-March - Game Development</span>
+          <div class="month-number">6-7</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Interactive Game Design</div>
+            <div class="tools">Key Tools: Scratch, Construct 3</div>
+            <div class="outcomes">Student Outcomes: Design and program complete interactive games</div>
+          </div>
+          <div class="projects-grid" id="feb-mar-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- April-May: Robotics/Engineering -->
+    <div class="timeline-item">
+      <div class="timeline-dot apr-may"></div>
+      <div class="timeline-connector"></div>
+      <div class="month-section apr-may">
+        <div class="month-header">
+          <span>🤖</span>
+          <span>April-May - Robotics & Engineering</span>
+          <div class="month-number">8-9</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Physical Computing</div>
+            <div class="tools">Key Tools: LEGO Spike, Ozobots</div>
+            <div class="outcomes">Student Outcomes: Build and program robotic solutions to real-world problems</div>
+          </div>
+          <div class="projects-grid" id="apr-may-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- June: Independent Projects -->
+    <div class="timeline-item">
+      <div class="timeline-dot june"></div>
+      <div class="month-section june">
+        <div class="month-header">
+          <span>🚀</span>
+          <span>June - Independent Projects</span>
+          <div class="month-number">10</div>
+        </div>
+        <div class="month-content">
+          <div class="focus-area">
+            <div class="focus-title">Focus Area: Self-Directed Innovation</div>
+            <div class="tools">Key Tools: Student Choice Platforms</div>
+            <div class="outcomes">Student Outcomes: Design and execute self-directed STEM projects combining all learned skills</div>
+          </div>
+          <div class="projects-grid" id="june-projects">
+            <!-- Projects will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gallery-view" class="timeline" style="display: none;">
+    <!-- Gallery view will be populated here -->
+  </div>
+
+  <div id="stats-view" class="timeline" style="display: none;">
+    <!-- Stats view will be populated here -->
+  </div>
+
+  <script>
+    // Curriculum data structure
+    const CURRICULUM_DATA = {
+      "september": {
+        "name": "3D Design Foundation",
+        "tools": ["Tinkercad"],
+        "projects": []
+      },
+      "october": {
+        "name": "Coding Foundations", 
+        "tools": ["Scratch", "Tynker"],
+        "projects": []
+      },
+      "november": {
+        "name": "Web Development",
+        "tools": ["HTML", "CSS", "JavaScript"],
+        "projects": []
+      },
+      "december": {
+        "name": "3D World Development",
+        "tools": ["Unreal Engine 5"],
+        "projects": []
+      },
+      "january": {
+        "name": "Digital Media",
+        "tools": ["Photo Editing", "Design Software"],
+        "projects": []
+      },
+      "feb-mar": {
+        "name": "Game Development",
+        "tools": ["Scratch", "Construct 3"],
+        "projects": []
+      },
+      "apr-may": {
+        "name": "Robotics & Engineering",
+        "tools": ["LEGO Spike", "Ozobots"],
+        "projects": []
+      },
+      "june": {
+        "name": "Independent Projects",
+        "tools": ["Student Choice"],
+        "projects": []
+      }
+    };
+
+    let allProjects = [];
+    let currentView = 'timeline';
+
+    // Load data and initialize
+    async function init() {
+      try {
+        const response = await fetch('projects.json');
+        const data = await response.json();
+        allProjects = data.projects || [];
+        organizeProjectsByMonth();
+        updateStats();
+        renderCurrentView();
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // Show sample data for demo
+        loadSampleData();
+      }
+    }
+
+    function loadSampleData() {
+      // Add some sample projects for demonstration
+      allProjects = [
+        {
+          id: "treehouse-1",
+          title: "Treehouse Design",
+          student: "Ava G.",
+          klass: "RM225 - G3 - Kappa",
+          grade: "Grade 3",
+          month: "september",
+          tool: "Tinkercad",
+          embedUrl: "https://www.tinkercad.com/embed/XXXXXXXXX?autostart=true",
+          thumbnail: "",
+          tags: ["treehouse", "architecture"],
+          date: "2025-09-15"
+        },
+        {
+          id: "game-1", 
+          title: "Space Adventure",
+          student: "Ethan M.",
+          klass: "RM225 - G3 - Kappa",
+          grade: "Grade 3",
+          month: "october",
+          tool: "Scratch",
+          embedUrl: "https://scratch.mit.edu/projects/123456789/embed",
+          thumbnail: "",
+          tags: ["game", "space"],
+          date: "2025-10-20"
+        }
+      ];
+      organizeProjectsByMonth();
+      updateStats();
+      renderCurrentView();
+    }
+
+    function organizeProjectsByMonth() {
+      // Clear existing projects
+      Object.keys(CURRICULUM_DATA).forEach(month => {
+        CURRICULUM_DATA[month].projects = [];
+      });
+
+      // Organize projects by month (you can add month field to your project data)
+      allProjects.forEach(project => {
+        const month = project.month || 'september'; // Default to september if no month specified
+        if (CURRICULUM_DATA[month]) {
+          CURRICULUM_DATA[month].projects.push(project);
+        }
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('totalProjects').textContent = allProjects.length;
+      document.getElementById('activeStudents').textContent = new Set(allProjects.map(p => p.student)).size;
+      document.getElementById('completedMonths').textContent = Object.values(CURRICULUM_DATA).filter(month => month.projects.length > 0).length;
+    }
+
+    function renderCurrentView() {
+      if (currentView === 'timeline') {
+        renderTimelineView();
+      } else if (currentView === 'gallery') {
+        renderGalleryView();
+      } else if (currentView === 'stats') {
+        renderStatsView();
+      }
+    }
+
+    function renderTimelineView() {
+      Object.keys(CURRICULUM_DATA).forEach(month => {
+        const container = document.getElementById(`${month}-projects`);
+        if (container) {
+          const projects = CURRICULUM_DATA[month].projects;
+          if (projects.length > 0) {
+            container.innerHTML = projects.map(project => `
+              <div class="project-card" onclick="openProject('${project.id}')">
+                <div class="project-thumb">
+                  ${project.thumbnail ? `<img src="${project.thumbnail}" alt="${project.title}" />` : 'No preview'}
+                </div>
+                <div class="project-meta">
+                  <div class="project-title">${project.title}</div>
+                  <div class="project-student">${project.student} • ${project.klass}</div>
+                </div>
+              </div>
+            `).join('');
+          } else {
+            container.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No projects yet</div>';
+          }
+        }
+      });
+    }
+
+    function renderGalleryView() {
+      const container = document.getElementById('gallery-view');
+      container.innerHTML = `
+        <div class="projects-grid">
+          ${allProjects.map(project => `
+            <div class="project-card" onclick="openProject('${project.id}')">
+              <div class="project-thumb">
+                ${project.thumbnail ? `<img src="${project.thumbnail}" alt="${project.title}" />` : 'No preview'}
+              </div>
+              <div class="project-meta">
+                <div class="project-title">${project.title}</div>
+                <div class="project-student">${project.student} • ${project.klass}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderStatsView() {
+      const container = document.getElementById('stats-view');
+      const monthStats = Object.entries(CURRICULUM_DATA).map(([month, data]) => ({
+        month: data.name,
+        count: data.projects.length,
+        tools: data.tools.join(', ')
+      }));
+
+      container.innerHTML = `
+        <div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          ${monthStats.map(stat => `
+            <div class="focus-area">
+              <div class="focus-title">${stat.month}</div>
+              <div class="tools">Tools: ${stat.tools}</div>
+              <div class="outcomes">Projects: ${stat.count}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function openProject(projectId) {
+      const project = allProjects.find(p => p.id === projectId);
+      if (project && project.embedUrl) {
+        window.open(project.embedUrl, '_blank');
+      }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        document.getElementById('timeline-view').style.display = 'none';
+        document.getElementById('gallery-view').style.display = 'none';
+        document.getElementById('stats-view').style.display = 'none';
+        
+        currentView = tab.dataset.view;
+        if (currentView === 'timeline') {
+          document.getElementById('timeline-view').style.display = 'block';
+        } else if (currentView === 'gallery') {
+          document.getElementById('gallery-view').style.display = 'block';
+        } else if (currentView === 'stats') {
+          document.getElementById('stats-view').style.display = 'block';
+        }
+        
+        renderCurrentView();
+      });
+    });
+
+    // Initialize
+    init();
+  </script>
+</body>
+</html>

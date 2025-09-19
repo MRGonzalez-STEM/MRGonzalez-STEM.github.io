@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON Converter</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; }
+        button { background: #007cba; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .output { background: white; padding: 15px; border-radius: 4px; margin-top: 10px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CSV to JSON Converter for Tinkercad Showcase</h2>
+        <p>Paste your CSV data below and click Convert to generate the projects.json format:</p>
+        
+        <label for="csvInput">CSV Data:</label>
+        <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
+        
+        <button onclick="convertCSV()">Convert to JSON</button>
+        
+        <div class="output" id="output" style="display: none;">
+            <h3>Generated JSON:</h3>
+            <pre id="jsonOutput"></pre>
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        function convertCSV() {
+            const csvText = document.getElementById('csvInput').value.trim();
+            if (!csvText) {
+                alert('Please paste CSV data first');
+                return;
+            }
+
+            try {
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                
+                const projects = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',').map(v => v.trim());
+                        const project = {};
+                        headers.forEach((header, index) => {
+                            let value = values[index] || '';
+                            // Handle tags (convert semicolon-separated to array)
+                            if (header === 'tags' && value) {
+                                value = value.split(';').map(t => t.trim()).filter(t => t);
+                            }
+                            project[header] = value;
+                        });
+                        projects.push(project);
+                    }
+                }
+
+                // Create the full JSON structure
+                const jsonData = {
+                    "meta": {
+                        "title": "STEM Tinkercad Showcase – 2025",
+                        "updated": new Date().toISOString().split('T')[0],
+                        "autoplayMs": 9000
+                    },
+                    "classes": [
+                        {"name": "Gonzalez-ULTIMATE", "grade": "Multi", "count": 150, "created": "2025-09-15"},
+                        {"name": "Rise - 2-8", "grade": "Multi (2–8)", "count": 100, "created": "2025-09-05"},
+                        {"name": "RM325 - G5 - Omicron", "grade": "Grade 5", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM324 - G5 - Xi", "grade": "Grade 5", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM234 - G4 - Nu", "grade": "Grade 4", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM235 - G4 - Mu", "grade": "Grade 4", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM234 - G4 - Lambda", "grade": "Grade 4", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM225 - G3 - Kappa", "grade": "Grade 3", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM224 - G3 - Iota", "grade": "Grade 3", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM222 - G2 - Theta", "grade": "Grade 2", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM220 - G2 - Eta", "grade": "Grade 2", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM223 - G2 - Zeta", "grade": "Grade 2", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM143 - G1 - Epsilon", "grade": "Grade 1", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM142 - G1 - Delta", "grade": "Grade 1", "count": 25, "created": "2025-09-05"},
+                        {"name": "RM141 - G1 - Gamma", "grade": "Grade 1", "count": 25, "created": "2025-09-05"}
+                    ],
+                    "projects": projects
+                };
+
+                const jsonString = JSON.stringify(jsonData, null, 2);
+                document.getElementById('jsonOutput').textContent = jsonString;
+                document.getElementById('output').style.display = 'block';
+                
+            } catch (error) {
+                alert('Error converting CSV: ' + error.message);
+            }
+        }
+
+        function copyToClipboard() {
+            const jsonText = document.getElementById('jsonOutput').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                alert('JSON copied to clipboard! Paste it into projects.json');
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Barnum Public Schools - STEM Program</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Welcome to Barnum Public Schools STEM Program - Explore student projects, curriculum timeline, and teaching resources." />
+  <style>
+    :root {
+      --bg: #0f172a; --card: #111827; --muted: #94a3b8; --text: #e5e7eb;
+      --accent: #22c55e; --accent-2: #06b6d4; --border: #243041;
+      --chip: #1f2937; --chip-active: #0ea5e9; --shadow: 0 10px 25px rgba(0,0,0,0.35);
+      --highlight: #fbbf24; --highlight-bg: rgba(251,191,36,0.1);
+    }
+    
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(34,197,94,0.06), transparent 50%),
+        radial-gradient(1000px 600px at 110% 10%, rgba(6,182,212,0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container { 
+      max-width: 1200px; margin: 0 auto; padding: 0 22px; flex: 1;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    
+    /* Header */
+    header { 
+      text-align: center; margin-bottom: 60px;
+    }
+    .school-logo {
+      font-size: clamp(2.5rem, 2rem + 3vw, 4rem); font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+    .program-title {
+      font-size: 1.6rem; color: var(--muted); margin-bottom: 25px;
+    }
+    .welcome-message {
+      font-size: 1.2rem; color: var(--text); max-width: 700px; margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    
+    /* Navigation */
+    .nav-main {
+      display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-bottom: 60px;
+    }
+    
+    .nav-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border); border-radius: 20px; padding: 30px;
+      text-decoration: none; color: var(--text); transition: all 0.3s ease;
+      box-shadow: var(--shadow); position: relative; overflow: hidden;
+    }
+    
+    .nav-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+    
+    .nav-card:hover { 
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .nav-card-header {
+      display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+    }
+    
+    .nav-card-icon {
+      font-size: 2rem;
+    }
+    
+    .nav-card-title {
+      font-size: 1.3rem; font-weight: 700; color: var(--accent);
+    }
+    
+    .nav-card-description {
+      color: var(--muted); font-size: 1rem; line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .nav-card-features {
+      list-style: none; padding: 0; margin: 0;
+    }
+    
+    .nav-card-features li {
+      color: var(--text); font-size: 0.9rem; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    
+    .nav-card-features li::before {
+      content: '✓';
+      color: var(--accent); font-weight: bold;
+    }
+    
+    /* Stats */
+    .stats-section {
+      background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(6,182,212,0.1));
+      border: 1px solid var(--accent); border-radius: 20px; padding: 40px;
+      text-align: center; margin-bottom: 40px;
+    }
+    
+    .stats-title {
+      font-size: 1.5rem; font-weight: 700; color: var(--accent);
+      margin-bottom: 30px;
+    }
+    
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 30px;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2.5rem; font-weight: 800; color: var(--accent);
+      display: block; margin-bottom: 8px;
+    }
+    
+    .stat-label {
+      color: var(--muted); font-size: 0.9rem; font-weight: 600;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center; padding: 40px 0; border-top: 1px solid var(--border);
+      margin-top: 60px; color: var(--muted);
+    }
+    
+    .footer-title {
+      font-size: 1.2rem; font-weight: 700; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    
+    .footer-subtitle {
+      font-size: 1rem; color: var(--muted);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 0 15px; }
+      .nav-main { grid-template-columns: 1fr; gap: 15px; }
+      .nav-card { padding: 25px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="school-logo">Barnum Public Schools</div>
+      <div class="program-title">STEM Program</div>
+      <div class="welcome-message">
+        Welcome to our comprehensive STEM education platform. Explore student projects, 
+        track curriculum progress, and discover the innovative work happening across all grade levels.
+        Led by Mr. Alex Gonzalez with over 8 years of teaching experience.
+      </div>
+    </header>
+
+    <div class="nav-main">
+      <!-- Dashboard -->
+      <a href="showcase/index.html" class="nav-card">
+        <div class="nav-card-header">
+          <span class="nav-card-icon">🏠</span>
+          <h2 class="nav-card-title">Dashboard</h2>
+        </div>
+        <p class="nav-card-description">
+          Main hub with statistics, recent projects, curriculum progress, and quick access to all features.
+        </p>
+        <ul class="nav-card-features">
+          <li>Live project statistics</li>
+          <li>Recent student work</li>
+          <li>Curriculum progress tracking</li>
+          <li>Quick navigation</li>
+        </ul>
+      </a>
+
+      <!-- Student Gallery -->
+      <a href="showcase/gallery.html" class="nav-card">
+        <div class="nav-card-header">
+          <span class="nav-card-icon">🎨</span>
+          <h2 class="nav-card-title">Student Gallery</h2>
+        </div>
+        <p class="nav-card-description">
+          Interactive showcase of all student projects with filtering, search, and slideshow capabilities.
+        </p>
+        <ul class="nav-card-features">
+          <li>Filter by grade and class</li>
+          <li>Search across projects</li>
+          <li>Interactive slideshow</li>
+          <li>Full-screen viewing</li>
+        </ul>
+      </a>
+
+      <!-- Curriculum Timeline -->
+      <a href="showcase/curriculum.html" class="nav-card">
+        <div class="nav-card-header">
+          <span class="nav-card-icon">📚</span>
+          <h2 class="nav-card-title">Curriculum Timeline</h2>
+        </div>
+        <p class="nav-card-description">
+          Visual timeline showing the year-long progression through 3D Design, Coding, Web Development, and more.
+        </p>
+        <ul class="nav-card-features">
+          <li>Month-by-month progression</li>
+          <li>Color-coded focus areas</li>
+          <li>Project counts per month</li>
+          <li>Interactive timeline</li>
+        </ul>
+      </a>
+
+      <!-- About -->
+      <a href="showcase/about.html" class="nav-card">
+        <div class="nav-card-header">
+          <span class="nav-card-icon">👨‍🏫</span>
+          <h2 class="nav-card-title">About Mr. Gonzalez</h2>
+        </div>
+        <p class="nav-card-description">
+          Learn about the teaching philosophy, experience, and specializations of our STEM instructor.
+        </p>
+        <ul class="nav-card-features">
+          <li>Teaching philosophy</li>
+          <li>8+ years experience</li>
+          <li>15+ institutions</li>
+          <li>12 specializations</li>
+        </ul>
+      </a>
+    </div>
+
+    <div class="stats-section">
+      <h3 class="stats-title">Program Overview</h3>
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="stat-number">500+</span>
+          <div class="stat-label">Students</div>
+        </div>
+        <div class="stat">
+          <span class="stat-number">16</span>
+          <div class="stat-label">Classes</div>
+        </div>
+        <div class="stat">
+          <span class="stat-number">10</span>
+          <div class="stat-label">Focus Areas</div>
+        </div>
+        <div class="stat">
+          <span class="stat-number">8+</span>
+          <div class="stat-label">Years Teaching</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-title">Barnum Public Schools STEM Program</div>
+      <div class="footer-subtitle">Empowering students through project-based learning and creative technology</div>
+    </footer>
+  </div>
+
+  <script>
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add hover effects to navigation cards
+      const navCards = document.querySelectorAll('.nav-card');
+      navCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+
+      // Add click tracking (optional)
+      navCards.forEach(card => {
+        card.addEventListener('click', function() {
+          console.log('Navigating to:', this.href);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
